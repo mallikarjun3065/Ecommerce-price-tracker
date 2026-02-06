@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Find Similar Products – Smart Price Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      min-height: 100vh;
+    }
+    /* Sidebar */
+    .sidebar {
+      width: 230px;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    .sidebar .subtitle {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6b7280;
+      margin-bottom: 6px;
+      margin-top: 10px;
+    }
+    .nav-link {
+      font-size: 14px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 4px;
+      display: block;
+      text-decoration: none;
+      color: #e5e7eb;
+    }
+    .nav-link:hover {
+      background: #374151;
+    }
+    .nav-link.active {
+      background: #3b82f6;
+    }
+
+    /* Main area */
+    .main {
+      flex: 1;
+      padding: 24px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .top-bar-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #111827;
+    }
+    .top-bar-sub {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .top-bar-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-secondary {
+      background: white;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Product info */
+    .product-info {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .product-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+    .product-meta {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    /* Similar products */
+    .similar-products {
+      background: white;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 16px;
+    }
+
+    .store-option {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: #f9fafb;
+    }
+    .store-option:hover {
+      background: #f3f4f6;
+    }
+    .store-checkbox {
+      margin-right: 16px;
+    }
+    .store-info {
+      flex: 1;
+    }
+    .store-name {
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .store-url {
+      color: #6b7280;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .auto-compare-form {
+      margin-top: 24px;
+      padding: 20px;
+      background: #f0f9ff;
+      border-radius: 8px;
+      border: 1px solid #bae6fd;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #374151;
+    }
+    .form-group input[type="text"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* Alert messages */
+    .alert {
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    .alert-success {
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .alert-error {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+    }
+    .empty-state h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div>
+      <h2>Smart Price Tracker</h2>
+      <div class="subtitle">Track & Compare Prices</div>
+    </div>
+
+    <nav>
+      <div class="nav-section-title">Navigation</div>
+      <a href="{{ url_for('index') }}" class="nav-link">📊 Dashboard</a>
+      <a href="{{ url_for('add') }}" class="nav-link">➕ Add Product</a>
+      <a href="{{ url_for('compare') }}" class="nav-link active">🔄 Compare</a>
+    </nav>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="top-bar">
+      <div>
+        <div class="top-bar-title">Find Similar Products</div>
+        <div class="top-bar-sub">
+          Automatically find the same product on other e-commerce platforms.
+        </div>
+      </div>
+      <div class="top-bar-actions">
+        <a href="{{ url_for('product_detail', product_id=product['id']) }}" class="btn-secondary">
+          ← Back to Product
+        </a>
+      </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Current product info -->
+    <div class="product-info">
+      <div class="product-title">{{ product['name'] }}</div>
+      <div class="product-meta">
+        <span style="display: inline-block; padding: 4px 8px; background: #e3f2fd; color: #1565c0; border-radius: 4px; font-size: 12px; font-weight: 500; margin-right: 8px;">
+          {{ product['store']|title }}
+        </span>
+        Current Price: 
+        {% if product['current_price'] %}
+          ₹{{ "%.2f"|format(product['current_price']) }}
+        {% else %}
+          Not checked yet
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Similar products -->
+    <div class="similar-products">
+      <div class="section-title">🔍 Similar Products Found on Other Stores</div>
+      
+      <div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 6px; padding: 12px; margin-bottom: 16px; font-size: 14px;">
+        <strong>ℹ️ Note:</strong> The system searches across supported e-commerce stores for similar products. Only stores that are currently accessible are included.
+      </div>
+
+      {% if similar_products %}
+        <form method="POST" action="{{ url_for('auto_compare', product_id=product['id']) }}">
+          <div class="auto-compare-form">
+            <div class="form-group">
+              <label for="group_name">Comparison Group Name:</label>
+              <input type="text" id="group_name" name="group_name" value="{{ product['name'] }}" required placeholder="Enter a name for this comparison group">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <label style="font-weight: 500; color: #374151;">Select stores to compare:</label>
+            </div>
+
+            {% for sim_product in similar_products %}
+            <div class="store-option">
+              <input type="checkbox" name="stores" value="{{ sim_product['store'] }}" class="store-checkbox" id="store_{{ sim_product['store'] }}">
+              <label for="store_{{ sim_product['store'] }}" class="store-info">
+                <div class="store-name">{{ sim_product['name'] }}</div>
+                <div class="store-url">{{ sim_product['url'] }}</div>
+              </label>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 16px;">
+              🚀 Create Auto-Comparison Group
+            </button>
+          </div>
+        </form>
+      {% else %}
+        <div class="empty-state">
+          <h3>No Similar Products Found</h3>
+          <p>We couldn't find similar products on other stores automatically. Some stores block automated searches for security reasons. Try adding products manually from different stores to create comparisons.</p>
+          <a href="{{ url_for('add') }}" class="btn-primary" style="margin-top: 16px;">
+            Add Product Manually
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

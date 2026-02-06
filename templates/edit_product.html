@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit Product</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .box {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #1e293b;
+      font-weight: 700;
+      font-size: 28px;
+    }
+    label { 
+      font-weight: 600; 
+      display: block; 
+      margin-top: 20px;
+      margin-bottom: 8px;
+      color: #374151;
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%; 
+      padding: 12px 16px; 
+      border: 2px solid #e5e7eb;
+      border-radius: 10px; 
+      margin-top: 5px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      background: white;
+    }
+    .btn {
+      color: white; 
+      border: none; 
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      padding: 14px 20px; 
+      width: 100%; 
+      border-radius: 10px; 
+      margin-top: 25px; 
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    .cancel { 
+      display: block; 
+      text-align: center; 
+      margin-top: 20px; 
+      color: #6b7280; 
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .cancel:hover {
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+<div class="box">
+  <h2>Edit Product</h2>
+  <form method="POST">
+    <label for="name">Product Name:</label>
+    <input type="text" id="name" name="name" value="{{ product['name'] }}" placeholder="Enter product name">
+
+    <label for="store">Store:</label>
+    <select id="store" name="store" title="Select the store where the product is from">
+      <option value="">Select Store</option>
+      <option value="amazon" {% if product['store'].lower() == 'amazon' %}selected{% endif %}>Amazon</option>
+      <option value="flipkart" {% if product['store'].lower() == 'flipkart' %}selected{% endif %}>Flipkart</option>
+      <option value="myntra" {% if product['store'].lower() == 'myntra' %}selected{% endif %}>Myntra</option>
+    </select>
+
+    <label for="url">Product URL:</label>
+    <input type="text" id="url" name="url" value="{{ product['url'] }}" placeholder="Enter product URL">
+
+    <label for="target_price">Target Price:</label>
+    <input type="number" id="target_price" name="target_price" value="{{ product['target_price'] }}" placeholder="Optional target price">
+
+    <button type="submit" class="btn">Save Changes</button>
+  </form>
+
+  <a href="{{ url_for('index') }}" class="cancel">Cancel</a>
+</div>
+</body>
+</html>

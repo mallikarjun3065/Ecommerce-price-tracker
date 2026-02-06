@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ product['name'] }}</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1e293b;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+    }
+    
+    .product-header { 
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      padding: 30px; 
+      border-radius: 20px 20px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .product-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+      50% { transform: translate(-50%, -50%) rotate(180deg); }
+    }
+    
+    .product-header h1 { 
+      font-size: 32px; 
+      margin-bottom: 10px; 
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .product-header p { 
+      margin: 8px 0; 
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    .price-comparison { 
+      background: rgba(16, 185, 129, 0.1); 
+      padding: 25px; 
+      margin: 20px;
+      border-radius: 15px; 
+      border-left: 5px solid #10b981;
+      backdrop-filter: blur(10px);
+    }
+    
+    .comparison-table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-top: 15px; 
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .comparison-table th, .comparison-table td { 
+      padding: 15px; 
+      text-align: left; 
+      border-bottom: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+    }
+    
+    .comparison-table th {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 12px;
+    }
+    
+    .comparison-table tr:hover {
+      background: rgba(59, 130, 246, 0.05);
+    }
+    
+    .best-price-row { 
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important; 
+      border-left: 4px solid #16a34a;
+      position: relative;
+    }
+    
+    .best-price-row::before {
+      content: '★';
+      position: absolute;
+      left: -15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #16a34a;
+      font-size: 18px;
+    }
+    
+    .best-price { 
+      color: #166534; 
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .current-product { 
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-left: 4px solid #d97706;
+    }
+    
+    .price-cell { 
+      font-weight: 700; 
+      font-size: 18px; 
+      color: #1e293b;
+    }
+    
+    .store-badge { 
+      display: inline-block; 
+      padding: 6px 12px; 
+      background: linear-gradient(135deg, #e0f2fe, #bae6fd); 
+      color: #0369a1; 
+      border-radius: 20px; 
+      font-size: 12px; 
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .content-section {
+      padding: 30px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #1e293b, #475569);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .price-history-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .price-history-table th {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 12px;
+    }
+    
+    .price-history-table td {
+      padding: 15px;
+      border-bottom: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+    }
+    
+    .price-history-table tr:hover {
+      background: rgba(59, 130, 246, 0.05);
+    }
+    
+    .chart-container {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .chart-container h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 20px;
+    }
+    
+    .chart-container img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    button { 
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white; 
+      border: none; 
+      padding: 12px 24px; 
+      border-radius: 10px; 
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      margin: 5px;
+    }
+    
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .back-link { 
+      color: #64748b; 
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    
+    .back-link:hover { 
+      color: #3b82f6;
+      text-decoration: none;
+    }
+    
+    .alert {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid #f59e0b;
+      color: #92400e;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="product-header">
+      <h1>{{ product['name'] }}</h1>
+      <p><b>Store:</b> <span class="store-badge">{{ product['store']|title }}</span></p>
+      <p><b>Current Price:</b> 
+        {% if latest_price %}
+          <span style="font-size: 20px; font-weight: bold; color: white;">₹{{ "%.2f"|format(latest_price) }}</span>
+        {% else %}
+          <span style="color: #e2e8f0;">Not checked yet</span>
+        {% endif %}
+      </p>
+      <p><b>Target Price:</b> {{ product['target_price'] or 'Not set' }}</p>
+      <p><b>URL:</b> <a href="{{ product['url'] }}" target="_blank" style="color: #e2e8f0; text-decoration: underline;">{{ product['url'] }}</a></p>
+    </div>
+
+    {% if comparison_products %}
+    <div class="price-comparison">
+      <h2>🛒 Price Comparison Across Stores</h2>
+      {% if best_price %}
+        <p class="best-price">Best Price Found: ₹{{ "%.2f"|format(best_price) }}</p>
+      {% endif %}
+      
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Store</th>
+            <th>Current Price</th>
+            <th>Target Price</th>
+            <th>Last Updated</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for comp_product in comparison_products %}
+          <tr class="{% if comp_product['current_price'] == best_price %}best-price-row{% endif %} {% if comp_product['id'] == product['id'] %}current-product{% endif %}">
+            <td>
+              <span class="store-badge">{{ comp_product['store']|title }}</span>
+            </td>
+            <td class="price-cell">
+              {% if comp_product['current_price'] %}
+                ₹{{ "%.2f"|format(comp_product['current_price']) }}
+                {% if comp_product['current_price'] == best_price %}
+                  <span style="color: #16a34a; font-size: 12px;">★ Best Price</span>
+                {% endif %}
+              {% else %}
+                <span style="color: #64748b;">Not checked yet</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if comp_product['target_price'] %}
+                ₹{{ "%.2f"|format(comp_product['target_price']) }}
+              {% else %}
+                <span style="color: #64748b;">Not set</span>
+              {% endif %}
+            </td>
+            <td>{{ comp_product['formatted_checked_at'] }}</td>
+            <td>
+              {% if comp_product['id'] == product['id'] %}
+                <span style="color: #d97706;">Current Product</span>
+              {% else %}
+                <a href="{{ url_for('product_detail', product_id=comp_product['id']) }}" style="color: #3b82f6;">View Details</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <div class="content-section">
+      <a href="{{ url_for('run_check') }}">
+        <button>🔄 Run Price Check for All Products</button>
+      </a>
+      <a href="{{ url_for('find_similar_products', product_id=product['id']) }}">
+        <button style="background: linear-gradient(135deg, #f59e0b, #d97706);">🔍 Find on Other Stores</button>
+      </a>
+      <br><br>
+
+      <h2 class="section-title">📈 Price History</h2>
+      {% if history %}
+        <table class="price-history-table">
+          <tr>
+            <th>Checked At</th>
+            <th>Price</th>
+          </tr>
+          {% for row in history %}
+            <tr>
+              <td>{{ row['checked_at'] }}</td>
+              <td>₹{{ "%.2f"|format(row['price']) }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+
+        <div class="chart-container">
+          <h3>Price Trend Graph</h3>
+          {% if chart_img %}
+            <img src="data:image/png;base64,{{ chart_img }}" alt="Price History Chart">
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="alert">
+          <p>No price history yet. Click 'Run Price Check' to fetch prices.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05);">
+      <a href="{{ url_for('index') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>
