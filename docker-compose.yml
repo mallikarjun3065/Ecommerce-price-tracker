@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  smart-price-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-price-tracker
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./price_tracker.db:/app/price_tracker.db
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - smart-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+networks:
+  smart-network:
+    driver: bridge
