@@ -192,6 +192,15 @@
       color: #991b1b;
       border: 1px solid #fecaca;
     }
+    .btn-detail {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #6b7280;
+    }
   </style>
 </head>
 <body>
@@ -220,15 +229,9 @@
         </div>
       </div>
       <div class="top-bar-actions">
-        <button class="btn-secondary" onclick="location.href='{{ url_for('compare') }}'">
-          ← Back to Comparisons
-        </button>
-        <button class="btn-primary" onclick="location.href='{{ url_for('run_check_group', group_id=group_id) }}'">
-          🔄 Update This Group
-        </button>
-        <button class="btn-secondary" onclick="location.href='{{ url_for('run_check') }}'">
-          🔄 Update All Prices
-        </button>
+        <a href="{{ url_for('compare') }}" class="btn-secondary">← Back to Comparisons</a>
+        <a href="{{ url_for('run_check_group', group_id=group_id) }}" class="btn-primary">🔄 Update This Group</a>
+        <a href="{{ url_for('run_check') }}" class="btn-secondary">🔄 Update All Prices</a>
       </div>
     </div>
 
@@ -286,7 +289,7 @@
                 {{ product['formatted_checked_at'] }}
               </td>
               <td>
-                <a href="{{ url_for('product_detail', product_id=product['id']) }}" class="btn-secondary" style="padding:4px 8px; font-size:12px;">
+                <a href="{{ url_for('product_detail', product_id=product['id']) }}" class="btn-secondary btn-detail">
                   View Details
                 </a>
               </td>
@@ -295,7 +298,7 @@
           </tbody>
         </table>
       {% else %}
-        <div style="text-align: center; padding: 40px; color: #6b7280;">
+        <div class="empty-state">
           <h3>No products found in this comparison group.</h3>
           <p>This comparison group may have been deleted or products removed.</p>
         </div>
